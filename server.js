@@ -7,8 +7,8 @@ const bcrypt = require('bcrypt-nodejs')
 const db = knex({
     client: 'pg',
     connection: {
-        host: process.env.DATABASE_URL,
-	ssl: true
+        connectionString: process.env.DATABASE_URL,
+        ssl: true
     }
 })
 
@@ -23,7 +23,7 @@ app.use(cors())
 
 
 app.get('/', (req, res) => {
-    res.send(database.users)
+    res.send('server is working')
 })
 
 app.post('/signin', (req, res) => {
