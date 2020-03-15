@@ -13,6 +13,8 @@ const db = knex({
 })
 
 
+
+
 const app = express();
 app.use(bodyParser.json())
 app.use(cors())
@@ -25,9 +27,6 @@ app.get('/', (req, res) => {
 
 app.post('/signin', (req, res) => {
     const { email, password } = req.body;
-    if (!email || !password) {
-        return res.status(400).json('incorrect form submission');
-    }
     db.select('email', 'hash').from('login')
         .where('email', '=', email)
         .then(data => {
@@ -49,15 +48,12 @@ app.post('/signin', (req, res) => {
 
 app.post('/register', (req, res) => {
     const { email, password, name } = req.body;
-    if (!email || !name || !password) {
-        return res.status(400).json('incorrect form submission');
-    }
+
 
     var hash = bcrypt.hashSync(password);
 
     //db('login').returning('*').insert({hash, email})
 
-    const hash = bcrypt.hashSync(password);
     db.transaction(trx => {
         trx.insert({
             hash: hash,
@@ -72,15 +68,15 @@ app.post('/register', (req, res) => {
                         email: loginEmail[0],
                         name: name,
                         joined: new Date()
-                    })
-                    .then(user => {
-                        res.json(user[0]);
+                    }).then(user => {
+                        res.json(user[0])
                     })
             })
-            .then(trx.commit)
-            .catch(trx.rollback)
+            .then(trx.commit).catch(trx.rollback)
     })
-        .catch(err => res.status(400).json('unable to register'))
+        .catch(err => res.status(400).json('unable to join'))
+
+
 
 
 })
