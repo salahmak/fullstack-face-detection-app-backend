@@ -8,6 +8,10 @@ const handleRegister = (req, res, db, bcrypt) => {
     return res.status(400).json('incorrect email');
   }
 
+  if (password.length < 6) {
+    return res.status(400).json('incorrect password length');
+  }
+
 
 
   const hash = bcrypt.hashSync(password);
