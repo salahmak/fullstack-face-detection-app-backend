@@ -8,10 +8,11 @@ const handleRegister = (req, res, db, bcrypt) => {
     return res.status(400).json('incorrect email');
   }
 
-  if (password.length < 6) {
-    return res.status(400).json('incorrect password length');
-  }
+  const pwRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
 
+  if (pwRegex.test(password) === false) {
+    return res.status(400).json('password is not strong');
+  }
 
 
   const hash = bcrypt.hashSync(password);
