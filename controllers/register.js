@@ -3,10 +3,12 @@ const handleRegister = (req, res, db, bcrypt) => {
   if (!email || !name || !password) {
     return res.status(400).json('incorrect form submission');
   }
-  function emailIsValid(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json('incorrect email');
   }
-  emailIsValid(email)
+
+
 
   const hash = bcrypt.hashSync(password);
   db.transaction(trx => {
